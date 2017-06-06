@@ -1,0 +1,19 @@
+cmake_minimum_required(VERSION 3.7)
+project(libConnect)
+
+set(CMAKE_CXX_STANDARD 14)
+
+set(SOURCE_FILES library.cpp library.h ConStandAloneConnection.cpp ConStandAloneConnection.h ConThread.cpp ConThread.h)
+add_library(libConnect ${SOURCE_FILES})
+
+
+######## Unit Tests ##############
+set (GTEST_ROOT /usr)
+find_package(GTest REQUIRED)
+set(UnitTest_SOURCE_FILES GTest/Main.cpp GTest/ConThreadTest.cpp)
+add_executable(UnitTest ${UnitTest_SOURCE_FILES})
+#target_link_libraries(UnitTest ClionLibWithUnitTest)
+target_link_libraries(UnitTest GTest::GTest GTest::Main)
+
+######## Test App ################
+add_executable (ConThreadApp TestApps/ConThreadTestApp.cpp)
