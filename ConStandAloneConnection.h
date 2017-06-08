@@ -8,6 +8,7 @@
 
 #include <string>
 
+
 struct IConnectionCallback
 {
     virtual void onConnected ()=0;
@@ -15,15 +16,20 @@ struct IConnectionCallback
     virtual void onMsg ()=0;
 };
 
-class StandAloneConnection {
+class StandAloneConnection
+{
 public:
     StandAloneConnection (const std::string& host, long port)
     :host_ (host), port_(port)
     {};
 
+    //IConnection
+
 
 protected:
     std::string host_;
+
+protected:
     long port_;
 };
 

@@ -3,7 +3,7 @@ project(libConnect)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES library.cpp library.h ConStandAloneConnection.cpp ConStandAloneConnection.h ConThread.cpp ConThread.h)
+set(SOURCE_FILES library.cpp library.h ConStandAloneConnection.cpp ConStandAloneConnection.h ConThread.cpp ConThread.h ConTCPReceiver.cpp ConTCPReceiver.h)
 add_library(libConnect ${SOURCE_FILES})
 
 
@@ -15,5 +15,7 @@ add_executable(UnitTest ${UnitTest_SOURCE_FILES})
 #target_link_libraries(UnitTest ClionLibWithUnitTest)
 target_link_libraries(UnitTest GTest::GTest GTest::Main)
 
-######## Test App ################
+######## Test Apps ################
 add_executable (ConThreadApp TestApps/ConThreadTestApp.cpp)
+
+add_executable(ConSimpleServer TestApps/ConSimpleServer.cpp)
