@@ -9,12 +9,6 @@
 #include <string>
 
 
-struct IConnectionCallback
-{
-    virtual void onConnected ()=0;
-    virtual void onDisconnected ()=0;
-    virtual void onMsg ()=0;
-};
 
 class StandAloneConnection
 {
@@ -28,8 +22,6 @@ public:
 
 protected:
     std::string host_;
-
-protected:
     long port_;
 };
 

@@ -6,12 +6,13 @@
 #define LIBCONNECT_CONTCPRECEIVER_H
 
 #include "ConThread.h"
+#include "ConConnectionCallback.h"
 
 class ConTCPReceiver : public ConRunnable
 {
 public:
-    ConTCPReceiver(const std::string &host, int port)
-            : remoteHost_(host), remotePort_(port)
+    ConTCPReceiver(const std::string &host, int port, IConnectionCallback *callback)
+            : remoteHost_(host), remotePort_(port), callback_(callback)
     {
     }
 
@@ -20,9 +21,12 @@ public:
 protected:
     bool connect();
 
+    IConnectionCallback *callback_ = nullptr;
+
     const std::string remoteHost_;
     int remotePort_;
     bool connected_ = false;
+    int socketfd_ = -1;
 };
 
 

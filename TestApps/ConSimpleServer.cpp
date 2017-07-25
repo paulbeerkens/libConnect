@@ -59,12 +59,16 @@ main(int argc, char **argv)
         return 1;
     }
 
+    std::cout << "Started listening on 9877" << std::endl;
+
     listen(listenfd, 1024);
 
     while (true)
     {
         clilen = sizeof(cliaddr);
         connfd = accept(listenfd, (struct sockaddr *) &cliaddr, &clilen);
+        std::cout << "Connected" << std::endl;
+
         if ((childpid = fork()) == 0)
         {
             close(listenfd);
