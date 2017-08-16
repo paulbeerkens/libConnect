@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.7)
 project(libConnect)
 
+
 set(CMAKE_CXX_STANDARD 14)
+
+#Allow my projet to be called libConnect without automatically adding a lib in front of the name
+set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
 
 set(SOURCE_FILES ConStandAloneConnection.cpp ConStandAloneConnection.h ConThread.cpp ConThread.h ConTCPReceiver.cpp ConTCPReceiver.h ConConnectionCallback.h)
@@ -10,7 +14,7 @@ add_library(libConnect ${SOURCE_FILES})
 #Add liblogger
 include_directories(/home/pbeerken/source/pkg/include)
 link_directories(/home/pbeerken/source/pkg/lib)
-target_link_libraries(libConnect libLog)
+target_link_libraries(libConnect libLog libUtils)
 
 file(GLOB HEADERS *.h)
 install(FILES ${HEADERS} DESTINATION ~/source/pkg/include/${PROJECT_NAME})
@@ -23,15 +27,7 @@ add_custom_target(install_${PROJECT_NAME}
 
 
 ######## Unit Tests ##############
-set (GTEST_ROOT /usr)
-find_package(GTest REQUIRED)
-set(UnitTest_SOURCE_FILES GTest/Main.cpp GTest/ConThreadTest.cpp)
-add_executable(UnitTest ${UnitTest_SOURCE_FILES})
-#target_link_libraries(UnitTest ClionLibWithUnitTest)
-target_link_libraries(UnitTest GTest::GTest GTest::Main)
+add_subdirectory(GTest)
 
 ######## Test Apps ################
-add_executable (ConThreadApp TestApps/ConThreadTestApp.cpp)
-add_executable(ConSimpleServer TestApps/ConSimpleServer.cpp)
-add_executable(ConStandAloneClient TestApps/ConStandAloneTestClient.cpp)
-target_link_libraries(ConStandAloneClient libConnect pthread)
+add_subdirectory(TestApps)

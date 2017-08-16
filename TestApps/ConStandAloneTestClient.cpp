@@ -4,20 +4,23 @@
 
 #include "../ConStandAloneConnection.h"
 #include "../ConTCPReceiver.h"
-//#include <thread>
+#include <iostream>
 
 struct MyCallBack : public IConnectionCallback
 {
     void onConnected() override
     {
+        std::cout << "MyCallBack::onConnected ()" << std::endl;
     };
 
     void onDisconnected() override
     {
+        std::cout << "MyCallBack::onDisconnected ()" << std::endl;
     };
 
     void onMsg() override
     {
+        std::cout << "MyCallbBack::onMsg ()" << std::endl;
     };
 };
 

@@ -1,0 +1,6 @@
+add_executable(ConThreadApp ConThreadTestApp.cpp)
+
+add_executable(ConSimpleServer ConSimpleServer.cpp)
+
+add_executable(ConStandAloneClient ConStandAloneTestClient.cpp)
+target_link_libraries(ConStandAloneClient libConnect pthread)

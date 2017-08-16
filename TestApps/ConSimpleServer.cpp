@@ -22,6 +22,14 @@ str_echo(int sockfd)
 {
     ssize_t n;
     char buffer[10000];
+    std::cout << "Sending data" << std::endl;
+
+    //send the string hello preceded by it's length
+    const std::string textToSend("Hello");
+    int len = textToSend.size() + 1;
+    memcpy(buffer, &len, sizeof(len));
+    strcpy(buffer + 4, textToSend.c_str());
+    write(sockfd, buffer, 4 + len);
 
     again:
     while ((n = read(sockfd, buffer, 10000)) > 0)
@@ -47,6 +55,14 @@ main(int argc, char **argv)
     struct sockaddr_in cliaddr, serveraddr;
 
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
+
+    int enable = 1;
+    if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+    {
+        std::cout << "SetSocketOpt failed with error: " << std::strerror(errno);
+        return 1;
+    }
+
     bzero(&serveraddr, sizeof(serveraddr));
 
     serveraddr.sin_family = AF_INET;
@@ -65,15 +81,21 @@ main(int argc, char **argv)
 
     while (true)
     {
+
         clilen = sizeof(cliaddr);
         connfd = accept(listenfd, (struct sockaddr *) &cliaddr, &clilen);
         std::cout << "Connected" << std::endl;
 
+        /*
         if ((childpid = fork()) == 0)
         {
             close(listenfd);
             str_echo(connfd);
+            exit (0);
         }
+         */
+        str_echo(connfd);
+
         close(connfd);
     }
 

@@ -7,6 +7,7 @@
 
 #include "ConThread.h"
 #include "ConConnectionCallback.h"
+#include <libUtils/MutexWithOwnersip.h>
 
 class ConTCPReceiver : public ConRunnable
 {
@@ -21,12 +22,22 @@ public:
 protected:
     bool connect();
 
+    bool disconnect();
+
+    bool disconnectNoLocking();
+
+    bool readAMessage();
+
+    bool readNBytes(void *buf, int32_t len);
+
     IConnectionCallback *callback_ = nullptr;
 
     const std::string remoteHost_;
     int remotePort_;
     bool connected_ = false;
     int socketfd_ = -1;
+
+    MutexWithOwnership mutex_;
 };
 
 
