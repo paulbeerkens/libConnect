@@ -12,7 +12,7 @@ struct IConnectionCallback
 
     virtual void onDisconnected()=0;
 
-    virtual void onMsg()=0;
+    virtual void onMsg(void *buf, int len)=0;
 };
 
 

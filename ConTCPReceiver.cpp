@@ -23,7 +23,7 @@ void ConTCPReceiver::doWork()
                 std::this_thread::sleep_for(std::chrono::milliseconds(500));
             }
         }
-        while (connected_)
+        while (!requestedToTerminate_ && connected_)
         {
             if (!readAMessage())
             {
@@ -37,14 +37,13 @@ void ConTCPReceiver::doWork()
 bool ConTCPReceiver::connect()
 {
     std::lock_guard<std::mutex> guard(mutex_);
-    assert (socketfd_ == -1); //should not call connect it already a socket in use
-    if (socketfd_ != -1)
+    assert (!socket_->isSocketSet()); //should not call connect it already a socket in use
+    if (socket_->isSocketSet())
     {
         disconnectNoLocking();
     }
 
-    socketfd_ = socket(AF_INET, SOCK_STREAM, 0);
-    if (socketfd_ < 0)
+    if (!socket_->createSocket())
     {
         Logger::Instance().logError() << "Failed to create a socket" << LogStream::endl;
         return false;
@@ -61,7 +60,7 @@ bool ConTCPReceiver::connect()
         return false;
     }
 
-    if (::connect(socketfd_, (const sockaddr *) &serveraddr, sizeof(serveraddr)) != 0)
+    if (!socket_->connect((const sockaddr *) &serveraddr, sizeof(serveraddr)))
     {
         Logger::Instance().logError() << "Connect failed to : " << remoteHost_ << ":" << remotePort_ << LogStream::endl;
         return false;
@@ -86,10 +85,9 @@ bool ConTCPReceiver::disconnect()
 bool ConTCPReceiver::disconnectNoLocking()
 {
     assert (mutex_.owned());
-    if (socketfd_ != -1)
+    if (socket_->isSocketSet())
     {
-        ::close(socketfd_);
-        socketfd_ = -1;
+        socket_->destroySocket();
         connected_ = false;
     }
 }
@@ -121,8 +119,12 @@ ConTCPReceiver::readAMessage()
         return false;
     }
 
-    std::string s(buffer, len - 1);
-    Logger::Instance().logError() << "Received: " << s << LogStream::endl;
+    //std::string s(buffer, len - 1);
+    //Logger::Instance().logError() << "Received: " << s << LogStream::endl;
+    if (callback_)
+    {
+        callback_->onMsg(&buffer, len);
+    }
 
     return true;
 }
@@ -132,14 +134,18 @@ bool ConTCPReceiver::readNBytes(void *buf, int32_t len)
 {
     assert (len > 0);
     assert (connected_);
-    assert (socketfd_ > 0);
+    //   assert (socket_->isSocketSet());
 
     char *writePtr = static_cast <char *> (buf);
     int32_t bytesToRead = len;
 
+    //int testValue;
+    //int s=socket_->test (&testValue);
+
+
     while ((bytesToRead > 0) && connected_)
     {
-        int32_t bytesRead = read(socketfd_, writePtr, bytesToRead);
+        int32_t bytesRead = socket_->read(writePtr, bytesToRead);
         if (bytesRead > 0)
         {
             bytesToRead -= bytesRead;

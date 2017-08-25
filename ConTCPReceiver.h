@@ -8,12 +8,14 @@
 #include "ConThread.h"
 #include "ConConnectionCallback.h"
 #include <libUtils/MutexWithOwnersip.h>
+#include "ConSocket.h"
 
 class ConTCPReceiver : public ConRunnable
 {
 public:
-    ConTCPReceiver(const std::string &host, int port, IConnectionCallback *callback)
-            : remoteHost_(host), remotePort_(port), callback_(callback)
+    ConTCPReceiver(const std::string &host, int port, IConnectionCallback *callback,
+                   ConSocket *socket = new ConSocketImpl())
+            : remoteHost_(host), remotePort_(port), callback_(callback), socket_(socket)
     {
     }
 
@@ -35,9 +37,10 @@ protected:
     const std::string remoteHost_;
     int remotePort_;
     bool connected_ = false;
-    int socketfd_ = -1;
+    //int socketfd_ = -1;
 
     MutexWithOwnership mutex_;
+    ConSocket *socket_;
 };
 
 

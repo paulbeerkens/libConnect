@@ -25,7 +25,7 @@ str_echo(int sockfd)
     std::cout << "Sending data" << std::endl;
 
     //send the string hello preceded by it's length
-    const std::string textToSend("Hello");
+    const std::string textToSend("Hello World");
     int len = textToSend.size() + 1;
     memcpy(buffer, &len, sizeof(len));
     strcpy(buffer + 4, textToSend.c_str());
