@@ -6,10 +6,13 @@
 #define LIBCONNECT_CONSOCKET_H
 
 #include <sys/socket.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <assert.h>
 #include <unistd.h>
+
+#include <iostream>
 
 class ConSocket
 {
@@ -25,8 +28,12 @@ public:
     virtual bool destroySocket()=0;
 
     virtual ssize_t read(void *buf, size_t count)=0;
-    //virtual ssize_t test (int*)=0;
-    /* more functions */
+
+    virtual bool setsockopt(int level, int optname, const void *optval, socklen_t optlen)=0;
+
+    virtual bool bind(const struct sockaddr *addr, socklen_t addrlen)=0;
+
+    virtual bool listen(int backlog)=0;
 };
 
 class ConSocketImpl : public ConSocket
@@ -41,12 +48,17 @@ public:
     {
     }
 
+    virtual ~ConSocketImpl()
+    {
+        std::cout << "ConSocketImpl::~ConSocketImpl" << std::endl;
+    }
+
     bool connect(const struct sockaddr *address, socklen_t address_len) override
     {
         return ::connect(socket_, address, address_len) == 0;
     }
 
-    ConSocketImpl *accept(struct sockaddr *address, socklen_t *address_len) override
+    ConSocket *accept(struct sockaddr *address, socklen_t *address_len) override
     {
         int s = ::accept(socket_, address, address_len);
         if (s == -1)
@@ -79,7 +91,23 @@ public:
         return ::read(socket_, (void *) buf, count);
     }
 
-    //virtual ssize_t test (int* t) {*t=1234; return 4;};
+    bool setsockopt(int level, int optname, const void *optval, socklen_t optlen) override
+    {
+        return ::setsockopt(socket_, level, optname, optval, optlen) == 0;
+    }
+
+    virtual bool bind(const struct sockaddr *addr, socklen_t addrlen)
+    {
+        return ::bind(socket_, addr, addrlen) == 0;
+    }
+
+    virtual bool listen(int backlog)
+    {
+        return ::listen(socket_, backlog) == 0;
+    }
+
+
+
 private:
     int socket_ = -1;
 };

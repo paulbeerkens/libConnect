@@ -27,6 +27,14 @@ public:
 
     MOCK_METHOD2(read, ssize_t(void * , size_t));
 
+    MOCK_METHOD4(setsockopt, bool(int, int,
+            const void*, socklen_t));
+
+    MOCK_METHOD2(bind, bool(
+            const struct sockaddr*, socklen_t));
+
+    MOCK_METHOD1(listen, bool(int));
+
     bool socketSet_ = false;
 };
 

@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_STATIC_LIBRARY_PREFIX "")
 
 
-set(SOURCE_FILES ConStandAloneConnection.cpp ConStandAloneConnection.h ConThread.cpp ConThread.h ConTCPReceiver.cpp ConTCPReceiver.h ConConnectionCallback.h ConSocket.h)
+set(SOURCE_FILES ConStandAloneConnection.cpp ConStandAloneConnection.h ConThread.cpp ConThread.h ConTCPReceiver.cpp ConTCPReceiver.h ConCallback.h ConSocket.h ConServer.cpp ConServer.h ConThread2.cpp ConThread2.h)
 add_library(libConnect ${SOURCE_FILES})
 
 #Add liblogger

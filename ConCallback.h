@@ -15,5 +15,13 @@ struct IConnectionCallback
     virtual void onMsg(void *buf, int len)=0;
 };
 
+class ConTCPReceiver;
+
+struct IServerCallback
+{
+    virtual void onConnect(ConTCPReceiver *)=0;
+
+    virtual void onDisconnect(ConTCPReceiver *)=0;
+};
 
 #endif //LIBCONNECT_CONCONNECTIONCALLBACK_H

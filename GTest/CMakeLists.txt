@@ -42,7 +42,7 @@ include_directories("${source_dir}/googletest/include"
 #set(GTEST_ROOT /usr)
 #find_package(GTest REQUIRED)
 
-set(UnitTest_SOURCE_FILES Main.cpp ConThreadTest.cpp ConSocketMock.h ConTCPReveiverTest.cpp)
+set(UnitTest_SOURCE_FILES Main.cpp ConThreadTest.cpp ConSocketMock.h ConTCPReveiverTest.cpp ConThread2Test.cpp)
 
 add_executable(UnitTest ${UnitTest_SOURCE_FILES})
 target_link_libraries(UnitTest libgtest libgmock libConnect)

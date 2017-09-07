@@ -35,7 +35,7 @@ public:
 };
 
 
-TEST(MyConThread2Test, TestThatItRunsInASeparateThread)
+TEST(MyConThreadTest, TestThatItRunsInASeparateThread)
 {
     ConThread<MyClassToBeRun> ct (10'000);
     EXPECT_EQ (0,ct.get ().i_);
@@ -44,7 +44,7 @@ TEST(MyConThread2Test, TestThatItRunsInASeparateThread)
     EXPECT_EQ (10000,ct.get ().i_);
 }
 
-TEST(MyConThread2Test, TestThatCanBeDestroyed)
+TEST(MyConThreadTest, TestThatCanBeDestroyed)
 {
     ConThread<MyClassToBeRun> ct (1'000'000'000);
     ct.get ().startPromise_.set_value ();

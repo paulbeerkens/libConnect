@@ -6,18 +6,21 @@
 #define LIBCONNECT_CONTCPRECEIVER_H
 
 #include "ConThread.h"
-#include "ConConnectionCallback.h"
+#include "ConCallback.h"
 #include <libUtils/MutexWithOwnersip.h>
 #include "ConSocket.h"
+#include <memory>
 
 class ConTCPReceiver : public ConRunnable
 {
 public:
     ConTCPReceiver(const std::string &host, int port, IConnectionCallback *callback,
-                   ConSocket *socket = new ConSocketImpl())
-            : remoteHost_(host), remotePort_(port), callback_(callback), socket_(socket)
+                   std::unique_ptr<ConSocket> socket = std::make_unique<ConSocketImpl>())
+            : remoteHost_(host), remotePort_(port), callback_(callback), socket_(std::move(socket))
     {
+        assert (callback_);
     }
+
 
     void doWork() override;
 
@@ -37,10 +40,9 @@ protected:
     const std::string remoteHost_;
     int remotePort_;
     bool connected_ = false;
-    //int socketfd_ = -1;
 
     MutexWithOwnership mutex_;
-    ConSocket *socket_;
+    std::unique_ptr<ConSocket> socket_ = nullptr;
 };
 
 
